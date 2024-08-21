@@ -22,8 +22,6 @@ public class EmpImpl implements EmployeeManagerCustomRepository {
     @Override
     public List<EmployeeManagerModel> getAllEmployees() {
         List<EmployeeManagerModel> employees = (List<EmployeeManagerModel>) employeeManagerRepository.findAll();
-
-
         return employees.stream()
             .sorted((e1, e2) -> e1.getId().compareTo(e2.getId())) 
             .collect(Collectors.toList());
@@ -36,13 +34,11 @@ public class EmpImpl implements EmployeeManagerCustomRepository {
 
     @Override
     public EmployeeManagerModel findByExistingManagerId(String managerId) {
-        // Assuming you are searching by a specific field that indicates the manager ID
         return employeeManagerRepository.findById(managerId).stream().findFirst().orElse(null);
     }
 
     @Override
     public EmployeeManagerModel findManagerByDepartment(String department) {
-        // Assuming the manager is identified by the department
         return employeeManagerRepository.findByDepartment(department).stream().findFirst().orElse(null);
     }
 

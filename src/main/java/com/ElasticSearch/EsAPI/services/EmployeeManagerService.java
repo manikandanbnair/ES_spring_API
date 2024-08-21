@@ -54,7 +54,7 @@ public class EmployeeManagerService {
         employee.setCreatedTime(now);
         employee.setUpdatedTime(now);
 
-        Boolean check = true;
+      
         // Handle employee as manager or regular employee
         if ("0".equals(managerId)) { // Changed to String comparison
             if ("Account Manager".equalsIgnoreCase(designation)) {
@@ -152,7 +152,7 @@ public class EmployeeManagerService {
                 List<EmployeeManagerModel> employeeList = employeeManagerRepository
                         .getEmployeesByManagerIdAndJoiningDate(managerId, minJoiningDate);
                 List<EmployeeResponseDTO> employees = convertToEmployeeResponseDTO(employeeList);
-                System.out.println("here:" + minYearsOfExperience);
+
 
                 ResponseDTO.Details details = new ResponseDTO.Details();
                 details.setAccountManager(manager.getName());
@@ -162,6 +162,7 @@ public class EmployeeManagerService {
                 detailsList.add(details);
             } else {
                 check = false;
+                throw new IllegalArgumentException("Invalid Manager ID");
             }
         } else if (managerId != null) {
             if (Integer.parseInt(managerId) < 0) {
@@ -279,6 +280,7 @@ public class EmployeeManagerService {
 
                 employee.setManagerId(newManagerId);
                 employee.setDepartment(newManager.getDepartment());
+                employee.setUpdatedTime(OffsetDateTime.now());
                 employeeManagerMainRepository.save(employee);
 
                 name = employee.getName();
@@ -296,6 +298,7 @@ public class EmployeeManagerService {
     }
 
     // DELETE
+    @Transactional
     public ResponseMessage deleteEmployee(String id) {
         ResponseMessage responseMessage = new ResponseMessage();
         EmployeeManagerModel employeeOpt = employeeManagerRepository.findByIdCustom(id);
